@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qx.ar.admin.dao.IAdminUserDao">
+	<sql id="ColumnList">
+		id,
+		head_url as headUrl,
+		nick_name as nickName,
+		phone,
+		password,
+		map_x as mapX,
+		map_y as mapY,
+		device as device,
+		addtime,
+		apptoken
+		
+	</sql>
+	<resultMap type="User" id="ResultMap">
+		<id property="id" column="id" />
+		<result property="nickName" column="nickName" />
+		<result property="headUrl" column="headUrl" />
+		<result property="phone" column="phone" />
+		<result property="addtime" column="addtime" />
+	</resultMap>
+	
+	<!-- 查询列表 -->
+	<select id="findAll" resultMap="ResultMap" parameterType="User">
+		select 
+		<include refid="ColumnList" />
+		from qx_user 
+		where 1=1 
+		limit #{start},#{size}
+	</select>
+	
+	<!-- 删除 -->
+	<delete id="delete" parameterType="Integer">
+	  delete from qx_user where id=#{id}
+	</delete>
+	
+	<select id="findCount" parameterType="User" resultType="java.lang.Integer">
+	    select count(id) as totalNum  from qx_user where 1=1
+	</select>
+	
+    <!-- 新增发现    需要修改-->
+	<insert id="add" parameterType="User" useGeneratedKeys="true" keyProperty="id" flushCache="true">
+		INSERT INTO qx_resources(nick_name,phone,password,addtime)
+		VALUES(#{nickName},#{phone},#{password},#{addtime})
+	</insert>
+	<!-- 根据id查出信息 -->
+	<select id="findOne" resultMap="ResultMap" parameterType="Integer">
+		select 
+		<include refid="ColumnList" />
+		from qx_user 
+		where id=#{id}
+	</select>
+	<!-- 修改发现 -->
+	<update id="update" parameterType="User">
+		update qx_user
+		<trim prefix="set" suffixOverrides=",">
+			<if test="phone!=null">phone=#{phone},</if>
+			<if test="nickName!=null">nick_name=#{nickName},</if>
+			<if test="headUrl!=null">head_url=#{headUrl},</if>
+		</trim>
+		where id=#{id}
+	</update>
+
+</mapper>

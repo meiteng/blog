@@ -1,0 +1,69 @@
+package com.qx.ar.admin.service.impl;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import javax.annotation.Resource;
+import org.apache.poi.ss.formula.functions.T;
+import org.springframework.stereotype.Service;
+import com.qx.ar.admin.dao.IAdminArticleDao;
+import com.qx.ar.admin.service.IAdminArticleService;
+import com.qx.ar.modle.Article;
+import com.qx.ar.utils.BackPageUtil;
+
+@Service
+public class AdminArticleServiceImpl implements IAdminArticleService {
+	
+	@Resource
+	private IAdminArticleDao adminArticleDao;
+
+	@Override
+	public List<T> findAll(Article article) {
+		return adminArticleDao.findAll(article);
+	}
+
+	@Override
+	public Integer delete(Integer id) {
+		return adminArticleDao.delete(id);
+	}
+
+	@Override
+	public Integer add(Article article) {
+		return adminArticleDao.add(article);
+	}
+
+	@Override
+	public Article findOne(Article article) {
+		return (Article) adminArticleDao.findOne(article);
+		
+	}
+
+	@Override
+	public Map<String, Object> pageList(Article article, int page) {
+		 int totalNum=adminArticleDao.findCount(article);
+			
+			BackPageUtil pageUtil=new BackPageUtil(6,page,totalNum);
+			article.setSize(pageUtil.getSize());
+			article.setStart(pageUtil.getCurrentPage()*pageUtil.getSize());
+			List<T> findList =new ArrayList<T>();
+//			article = (Article) adminArticleDao.findOne(article);
+//			String content = article.getContent();
+//			content = content.substring(0, 20);
+//			article.setContent(content);
+			findList =adminArticleDao.findAll(article);
+		
+			Map<String,Object> listMap=new HashMap<String,Object>();
+
+			listMap.put("list", findList);
+			listMap.put("page", pageUtil);
+			return listMap;
+	}
+
+	@Override
+	public void update(Article article) {
+		adminArticleDao.update(article);
+	}
+
+}

@@ -1,0 +1,65 @@
+package com.qx.ar.admin.controller;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.qx.ar.admin.service.IAdminFindService;
+import com.qx.ar.admin.service.IAdminFindTypeService;
+import com.qx.ar.modle.Find;
+import com.qx.ar.modle.FindType;
+import com.qx.ar.utils.DateUtils;
+import com.qx.ar.utils.ValidateUtil;
+import com.qx.ar.utils.WebUtils;
+
+/**
+ * 管理员模块
+ * 
+ * @author Administrator
+ *
+ */
+@Controller("adminFindTypes")
+@RequestMapping("/admin/findTypes")
+public class AdminFindTypesController {
+	@Resource
+    private IAdminFindTypeService adminFindTypeService;
+	/**
+	 * 发现列表
+	 * 
+	 * @param request
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/list", produces = "text/html;")
+	public String list(HttpServletRequest request, Model model) {
+		FindType findType = new FindType();
+		List<Object> findTypeList = adminFindTypeService.findList(findType);
+		model.addAttribute("findTypeList", findTypeList);
+		System.out.println(findTypeList);
+		return "admin/findTypes/list";
+	}
+	
+	@RequestMapping(value = "/add", produces = "text/html;")
+	public String add(HttpServletRequest request, Model model) {
+		
+		return "admin/findTypes/add";
+	}
+	@RequestMapping(value = "/doAdd", produces = "text/html;")
+	public String doAdd(HttpServletRequest request, Model model) {
+		String title=request.getParameter("title");
+		String desc=request.getParameter("desc");
+		FindType find = new FindType(title,desc);		
+		find.setAddtime(DateUtils.getCurrentTimestamp());
+		adminFindTypeService.add(find);
+		
+		return "redirect:/admin/findTypes/list";
+	
+	}
+}

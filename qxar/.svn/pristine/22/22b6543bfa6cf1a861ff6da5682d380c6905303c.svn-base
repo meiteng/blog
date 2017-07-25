@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qx.ar.admin.dao.IAdminArticleDao">
+	<sql id="ColumnList">
+		id,
+		title,
+		img_url,
+		content,
+		addtime,
+		app_token as apptoken
+	</sql>
+
+	<resultMap type="Article" id="ResultMap">
+		<id property="id" column="id" />
+		<result property="img_url" column="img_url" />
+		<result property="title" column="title" />
+		<result property="content" column="content" />
+	    <result property="addtime" column="addtime" />
+		<result property="apptoken" column="apptoken" />
+	</resultMap>
+	
+	<!-- 查询列表 -->
+	<select id="findAll" resultMap="ResultMap" parameterType="Article">
+		select 
+		<include refid="ColumnList" />
+		from qx_article
+		where 1=1 
+		limit #{start},#{size}
+	</select>
+	
+	<select id="findCount" parameterType="Article" resultType="java.lang.Integer">
+	    select count(id) as totalNum  from qx_article where 1=1
+	</select>
+	
+		<!-- 根据id查出信息 -->
+	<select id="findOne" resultMap="ResultMap" parameterType="Integer">
+		select 
+		<include refid="ColumnList" />
+		from qx_article
+		where id=#{id}
+	</select>
+	
+	<!-- 添加 -->
+	<insert id="add" parameterType="Article" useGeneratedKeys="true" keyProperty="id" flushCache="true">
+		INSERT INTO 
+		qx_article(title,img_url,content)
+		VALUES(#{title},#{img_url},#{content})
+	</insert>
+	
+	<!-- 删除 -->
+	<delete id="delete" parameterType="Integer">
+		delete from qx_article where id=#{id}
+	</delete>
+	
+	<!-- 更新 -->
+		<!-- 修改发现 -->
+	<update id="update" parameterType="Article">
+		update qx_article
+		<trim prefix="set" suffixOverrides=",">
+			<if test="title!=null">title=#{title},</if>
+			<if test="content!=null">content=#{content},</if>
+			<if test="img_url!=null">img_url=#{img_url},</if>
+			<if test="addtime!=null">addtime=#{addtime},</if>
+		</trim>
+		where id=#{id}
+	</update>
+</mapper>

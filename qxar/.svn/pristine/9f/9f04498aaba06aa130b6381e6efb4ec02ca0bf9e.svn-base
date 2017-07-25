@@ -1,0 +1,2 @@
+.no_decration{text-decoration:none;color:#ffffff;}
+.no_decration :hover{text-decoration:none;color: inherit;}

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qx.ar.dao.IAboutDao">
+	<sql id="ColumnList">
+		id,
+		img_url as imgUrl,
+		title,
+		content,
+		addtime,
+		app_token as apptoken
+	</sql>
+
+	<select id="findOne" resultType="About" parameterType="About">
+		select
+		<include refid="ColumnList" />
+		from qx_about where 1=1 and app_token=#{apptoken}
+	</select>
+	
+
+
+
+
+</mapper>

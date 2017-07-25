@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qx.ar.dao.IFindDao">
+	<sql id="ColumnList">
+		id,
+		title,
+		`desc`,
+		content,
+		tags,
+		sort,
+		`like`,
+		`comment`,
+		addtime,
+		android_url as androidUrl,
+		ios_url as iosUrl,
+		img_url as imgUrl,
+		identification_url as identificationUrl,
+		identification_name as identificationName,
+		type_id as typtId
+	</sql>
+
+	<resultMap type="Find" id="ResultMap">
+		<id property="id" column="id" />
+		<result property="title" column="title" />
+		<result property="desc" column="desc" />
+		<result property="addtime" column="addtime" />
+	</resultMap>
+
+	<select id="findOne" resultType="Find" parameterType="Find">
+		select 
+		<include refid="ColumnList" />
+		from qx_find where 1=1 and id=#{id}
+	</select>
+
+
+	<select id="findAll" resultMap="ResultMap" parameterType="Find">
+		select
+		<include refid="ColumnList" />
+		from qx_find where 1=1
+		<if test="title != null">
+			and title like CONCAT('%',#{title},'%')
+		</if>
+		<if test="desc != null">
+			and `desc` like CONCAT('%',#{desc},'%')
+		</if>
+		<if test="addtime != null">
+			and addtime <![CDATA[<]]> #{addtime}
+		</if>
+		order by addtime desc
+		limit 0,#{size}
+	</select>
+
+
+
+
+
+</mapper>

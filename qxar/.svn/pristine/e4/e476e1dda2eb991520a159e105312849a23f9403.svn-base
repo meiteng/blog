@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qx.ar.dao.ICommentDao">
+	<sql id="ColumnList">
+		id,
+		user_id as userid,
+		obj_id as bojId,
+		content,
+		addtime,
+	</sql>
+
+	<sql id="add">
+		user_id,
+		obj_id,
+		content,
+		addtime
+	</sql>
+	
+	
+	<resultMap type="UserComment" id="ResultMap">
+		<id property="id" column="id" />
+		<result property="userid" column="userid" />
+		<result property="objId" column="objId" />
+		<result property="content" column="content" />
+		<result property="addtime" column="addtime" />
+		<result property="nickname" column="nickname" />
+		<result property="headUrl" column="headUrl" />
+	</resultMap>
+	<!-- 评论 -->
+	<insert id="add" parameterType="Comment" useGeneratedKeys="true"
+		keyProperty="id" flushCache="true">
+		insert into qx_comment(
+		<include refid="add" />
+		)
+		values( #{userid}, #{objId}, #{content}, #{addtime} )
+	</insert>
+
+	<select id="findAll" resultMap="ResultMap" parameterType="UserComment">
+		select c.id as id, c.user_id as userid,c.obj_id as objId,c.content,c.addtime,u.nick_name as nickname,u.head_url  as headUrl
+		from qx_comment c left join qx_user u on c.user_id =u.id 
+		where 1=1 and c.obj_id =#{objId}
+		<if test="addtime != null">
+			and c.addtime <![CDATA[<]]> #{addtime}
+		</if>
+		order by addtime desc
+		limit 0,#{size}
+	</select>
+
+</mapper>

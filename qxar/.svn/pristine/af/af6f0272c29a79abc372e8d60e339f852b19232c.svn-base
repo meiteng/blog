@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qx.ar.dao.ICompanyDao">
+	<sql id="ColumnList">
+		id,   
+	    company_name as companyName,
+	    address,
+	    contact,
+	    register_num as registerNum,
+	    app_token as apptoken
+	</sql>
+	<resultMap type="Company" id="ResultMap">
+		<id property="id" column="id" />
+		<result property="companyName" column="companyName" />
+		<result property="address" column="address" />
+		<result property="contact" column="contact" />
+		<result property="content" column="content" />
+		<result property="registerNum" column="registerNum" />
+		<result property="apptoken" column="apptoken" />
+	</resultMap>
+	<select id="findOne" parameterType="Company" resultType="Company">
+		select
+		<include refid="ColumnList" />
+		from qx_company where 1=1
+		<if test="apptoken!=null">
+			and app_token=#{apptoken}
+		</if>
+	</select>
+		<!-- 查询列表 -->
+	<select id="findAll" resultMap="ResultMap" parameterType="Company">
+		select 
+		<include refid="ColumnList" />
+		from qx_company where 1=1
+		limit #{start},#{size}
+	</select>
+	
+   <select id="findCount" parameterType="Company" resultType="java.lang.Integer">
+	    select count(id) as totalNum  from qx_company where 1=1
+	</select>
+	
+	<!-- 删除 -->
+	<delete id="delete" parameterType="Integer">
+		delete from qx_company where id=#{id}
+	</delete>
+	<!-- 新增发现 -->
+	<insert id="add" parameterType="Company" useGeneratedKeys="true"
+		keyProperty="id" flushCache="true">
+		INSERT INTO
+		qx_company(company_name,address,contact,register_num,app_token)
+		VALUES(#{companyName},#{address},#{contact},#{registerNum},#{apptoken})
+	</insert>
+	<!-- 修改发现 -->
+	<update id="update" parameterType="Company">
+		update qx_company
+		<trim prefix="set" suffixOverrides=",">
+			<if test="companyName!=null">company_name=#{companyName},</if>
+			<if test="address!=null">address=#{address},</if>
+			<if test="contact!=null">contact=#{contact},</if>
+			<if test="registerNum!=null">register_num=#{registerNum},</if>		
+		</trim>
+		where apptoken=#{apptoken}
+	</update>
+	
+</mapper>

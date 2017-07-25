@@ -1,0 +1,98 @@
+package com.qx.ar.admin.controller;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.qx.ar.admin.service.IAdminFindTypeService;
+import com.qx.ar.modle.FindType;
+import com.qx.ar.utils.DateUtils;
+import com.qx.ar.utils.WebUtils;
+
+/**
+ * 管理员模块
+ * 
+ * @author Administrator
+ *
+ */
+@Controller("adminFindTypes")
+@RequestMapping("/admin/findTypes")
+public class AdminFindTypesController {
+	@Resource
+    private IAdminFindTypeService adminFindTypeService;
+	/**
+	 * 发现列表
+	 * 
+	 * @param request
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/list", produces = "text/html;")
+	public String list(HttpServletRequest request, Model model) {
+		FindType findType = new FindType();
+		List<Object> findTypeList = adminFindTypeService.findList(findType);
+		model.addAttribute("findTypeList", findTypeList);
+		return "admin/findTypes/list";
+	}
+	
+	@RequestMapping(value = "/add", produces = "text/html;")
+	public String add(HttpServletRequest request, Model model) {
+		
+		return "admin/findTypes/add";
+	}
+	@RequestMapping(value = "/doAdd", produces = "text/html;")
+	public String doAdd(HttpServletRequest request, Model model) {
+		String title=request.getParameter("title");
+		String desc=request.getParameter("desc");
+		FindType find = new FindType(title,desc);		
+		find.setAddtime(DateUtils.getCurrentTimestamp());
+		adminFindTypeService.add(find);
+		
+		return "redirect:/admin/findTypes/list";
+	
+	}
+	@RequestMapping(value = "/update", produces = "text/html;charset=UTF-8")
+	public String update(HttpServletRequest request, Model model,HttpServletResponse response) {
+		WebUtils.addCookie(request, response, "listUrl", request.getHeader("Referer"), -1);
+		String id=request.getParameter("id");
+		//TODO 验证没写
+		FindType user=new FindType();
+		user.setId(Integer.parseInt(id));	
+		user=adminFindTypeService.findOne(user);
+		model.addAttribute("detail", user);
+		return "admin/findTypes/update";
+	}
+	
+	@RequestMapping(value="/doUpdate",produces="text/html;charset=UTF-8")
+	public String doUpdate(HttpServletRequest request, Model model){
+		String id =request.getParameter("id");
+		String title=request.getParameter("title");
+		String desc=request.getParameter("desc");
+		//TODO 验证规则 没有写
+		FindType user = new FindType(title,desc);
+		user.setId(Integer.parseInt(id));
+		user.setAddtime(DateUtils.getCurrentTimestamp());
+		System.out.println(user);
+		adminFindTypeService.update(user); 
+		return "redirect:" + WebUtils.findCookieValue(request, "listUrl");
+	}
+	/*
+	 * 删除
+	 */
+	@RequestMapping(value = "/delete", produces = "text/html;")
+	public String delete(HttpServletRequest request, Model model) {
+		// 字符串转换成integer
+		String id=request.getParameter("id");
+		//TODO 验证规则 没有写
+         
+		adminFindTypeService.delete(Integer.parseInt(id));
+		return "redirect:" + request.getHeader("Referer");
+
+	}
+}
