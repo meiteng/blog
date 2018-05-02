@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qx.ar.dao.IFindTypeDao">
+	<sql id="ColumnList">
+		id,
+		`title`,
+		`desc`,
+		addtime,
+		sort
+	</sql>
+	<resultMap type="FindType" id="ResultMap">
+		<id property="id" column="id" />
+		<result property="title" column="title" />
+		<result property="desc" column="desc" />
+		<result property="addtime" column="addtime" />
+		<result property="sort" column="sort" />
+	</resultMap>
+	<select id="findAll" resultMap="ResultMap">
+		select
+		<include refid="ColumnList" />
+		from qx_find_type where 1=1
+		order by sort desc
+		limit 10
+	</select>
+
+
+
+</mapper>

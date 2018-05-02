@@ -1,0 +1,4 @@
+.no_decration{text-decoration:none;color:#ffffff;}
+.no_decration :hover{text-decoration:none;color: inherit;}
+.submit_cancle{width: 50%; margin: 10px auto;}
+.submit_cancle button{width:120px;}

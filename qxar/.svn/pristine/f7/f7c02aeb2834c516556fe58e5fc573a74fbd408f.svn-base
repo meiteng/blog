@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qx.ar.admin.dao.IAdminArticleDao">
+	<sql id="ColumnList">
+		id,
+		img_url,
+		title,
+		content,
+		addtime,
+		app_token as apptoken
+	</sql>
+
+	<resultMap type="Article" id="ResultMap">
+		<id property="id" column="id" />
+		<result property="img_url" column="img_url" />
+		<result property="title" column="title" />
+		<result property="content" column="content" />
+		<result property="addtime" column="addtime" />
+		<result property="apptoken" column="apptoken" />
+	</resultMap>
+	
+	<!-- 查询列表 -->
+	<select id="findAll" resultMap="ResultMap" parameterType="Article">
+		select 
+		<include refid="ColumnList" />
+		from qx_article
+		where 1=1 
+		limit #{start},#{size}
+	</select>
+	
+	<select id="findCount" parameterType="Article" resultType="java.lang.Integer">
+	    select count(id) as totalNum  from qx_article where 1=1
+	</select>
+	
+		<!-- 根据id查出信息 -->
+	<select id="findOne" resultMap="ResultMap" parameterType="Integer">
+		select 
+		<include refid="ColumnList" />
+		from qx_article
+		where id=#{id}
+	</select>
+	
+	
+</mapper>

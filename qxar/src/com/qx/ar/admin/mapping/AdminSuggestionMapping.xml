@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qx.ar.admin.dao.IAdminSuggestionDao">
+	<sql id="ColumnList">
+		c.id,
+		c.content,
+		c.addtime,
+		c.contact,
+		c.user_id,
+		c.app_token as apptoken,
+		o.nick_name as nickname,
+		o.phone
+	</sql>
+  
+	 <resultMap type="Suggestion" id="ResultMap">
+		<id property="id" column="id" />
+		<result property="content" column="content" />
+		<result property="addtime" column="addtime" />
+		<result property="contact" column="contact" />
+		<result property="userid" column="userid" />
+		<result property="apptoken" column="apptoken"/>
+		<result property="nickname" column="nickname"/>
+		<result property="phone" column="phone"/>
+		
+	</resultMap>
+	
+	<!-- 查询列表 -->
+	<select id="findAll" resultMap="ResultMap" parameterType="Suggestion">
+		select 
+		<include refid="ColumnList" />
+		from qx_suggestions c,qx_user o where c.user_id =o.id 
+		limit #{start},#{size}
+	</select>
+	
+   <select id="findCount" parameterType="Suggestion" resultType="java.lang.Integer">
+	    select count(id) as totalNum  from qx_suggestions where 1=1
+	</select>
+	
+	<!-- 删除      删除qx_suggestions表中数据      qx_user中数据暂不处理   -->
+	<delete id="delete" parameterType="Integer">
+	  delete from qx_suggestions where id=#{id}
+	</delete>
+	 <!-- 新增发现    需要修改-->
+	<insert id="add" parameterType="Suggestion" useGeneratedKeys="true" keyProperty="id" flushCache="true">
+		INSERT INTO qx_suggestions(content,addtime,contact)
+		VALUES(#{content},#{addtime},#{contact})
+	</insert>
+	<select id="findOne" resultMap="ResultMap" parameterType="Suggestion">
+		select * 
+		from qx_suggestions 
+		where id=#{id}
+	</select>
+	<!-- 修改发现 -->
+	<update id="update" parameterType="Suggestion">
+		update qx_suggestions
+		<trim prefix="set" suffixOverrides=",">
+			<if test="content!=null">content=#{content},</if>
+			<if test="contact!=null">contact=#{contact},</if>
+		</trim>
+		where id=#{id}
+	</update>
+</mapper>

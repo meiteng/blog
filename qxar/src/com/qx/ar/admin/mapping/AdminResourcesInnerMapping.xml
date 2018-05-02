@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qx.ar.admin.dao.IAdminResourcesInnerDao">
+	<sql id="ColumnList">
+		id,
+		resources_id as resourcesid,
+		identification_url as
+		identificationUrl,
+		identification_name as identificationName,
+		android_url as androidUrl,
+		ios_url as iosUrl
+	</sql>
+	<resultMap type="ResourcesInner" id="ResultMap">
+		<id property="id" column="id" />
+		<result property="resourcesid" column="resourcesid" />
+		<result property="identificationUrl" column="identificationUrl" />
+		<result property="identificationName" column="identificationName" />
+		<result property="androidUrl" column="androidUrl" />
+		<result property="iosUrl" column="iosUrl" />
+	</resultMap>
+
+	<select id="findAll" resultMap="ResultMap" parameterType="ResourcesInner">
+		select
+		<include refid="ColumnList" />
+		from qx_resources_inner where 1=1 and resources_id=${resourcesid} limit #{start},#{size}
+	</select>
+	<select id="findCount" parameterType="ResourcesInner"
+		resultType="java.lang.Integer">
+		select count(id) as totalNum from qx_resources_inner where
+		1=1
+	</select>
+	<select id="findOne" parameterType="ResourcesInner" resultType="ResourcesInner">
+		select
+		<include refid="ColumnList" />
+		from qx_resources_inner where 1=1
+		<if test="id!=null">
+			and id=#{id}
+		</if>
+	</select>
+	<!-- 删除 -->
+	<delete id="delete" parameterType="Integer">
+		delete from qx_resources_inner
+		where id=#{id}
+	</delete>
+
+	<!-- 新增发现 -->
+	<insert id="add" parameterType="ResourcesInner"
+		useGeneratedKeys="true" keyProperty="id" flushCache="true">
+		INSERT INTO
+		qx_resources_inner(resources_id,identification_url,identification_name,android_url,ios_url)
+		VALUES(#{resourcesid},#{identificationUrl},#{identificationName},#{androidUrl},#{iosUrl})
+	</insert>
+
+	<update id="update" parameterType="ResourcesInner">
+		update qx_resources_inner
+		<trim prefix="set" suffixOverrides=",">
+			<if test="resourcesid!=null">resources_id=#{resourcesid},</if>
+			<if test="identificationUrl!=null">identification_url=#{identificationUrl},</if>
+			<if test="identificationName!=null">identification_name=#{identificationName},</if>
+			<if test="androidUrl!=null">android_url=#{androidUrl},</if>
+			<if test="iosUrl!=null">ios_url=#{iosUrl},</if>
+		</trim>
+		where id=#{id}
+	</update>
+</mapper>

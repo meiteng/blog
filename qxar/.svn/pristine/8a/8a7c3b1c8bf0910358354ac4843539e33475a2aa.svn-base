@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qx.ar.admin.dao.IAdminFindTypeDao">
+	<sql id="ColumnList">
+		id,
+		title,
+		`desc`,
+		addtime,
+		sort
+	</sql>
+	<!-- 返回的是一个list集合 -->
+    <resultMap type="FindType" id="ResultMap">
+		<id property="id" column="id" />
+		<result property="title" column="title" />
+		<result property="desc" column="desc" />
+		<result property="addtime" column="addtime" />
+		<result property="sort" column="sort" />
+	</resultMap>
+	<select id="findList" resultMap="ResultMap" parameterType="FindType">
+		select
+		<include refid="ColumnList" />
+		from qx_find_type
+		
+	</select>
+
+
+</mapper>

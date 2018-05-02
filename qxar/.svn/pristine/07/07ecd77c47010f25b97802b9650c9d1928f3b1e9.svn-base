@@ -1,0 +1,11 @@
+package com.qx.ar.admin.service;
+
+import java.util.List;
+
+
+
+public interface IAdminFindTypeService {
+	public List<Object> findList(Object object);
+	
+	
+}
